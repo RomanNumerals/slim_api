@@ -128,5 +128,66 @@ class FruitTest extends TestCase {
 	}
 
 	# test fruit update failed due to invalid fields
-	
+	public function testUpdateFruitFailed() {
+		# expected result string
+		$resultString = '{"fruit_name":"apple", "fruit_color":"red", "season":"fall", "calories":"103", "description":"crunchy yet refreshing"}';
+
+		# mock the query class & fetchAll functions
+		$query = $this->createMock('mockQuery');
+		$query->method('fetch')
+			->willReturn(json_decode($resultString, true)
+		);
+		$this->db->method('query')
+				->willReturn($query);
+			$this->db->method('exec')
+				->will($this->throwException(new PDOException()));
+
+		# mock the request environment (part of slim)
+		$env = Environment::mock([
+			'REQUEST_METHOD' => 'PUT',
+			'REQUEST_URI'    => '/people/1',
+		]);
+		$req = Request::createFromEnvironment($env);
+		$requestBody = ["fruit_name" => "apple", "fruit_color" => "red", "season" => "fall", "calories" => "103", "description" => "crunchy yet refreshing"];
+		$req = $req->withParsedBody($requestBody);
+		$this->app->getContainer()['request'] = $req;
+
+		# actually run the request through the app
+		$response = $this->app->run(true);
+		# assert expected status code and body
+		$this->assertSame(400, $response->getStatusCode());
+		$this->assertSame('{"status":400, "message":"Invalid data provided to update"}'),
+		(string)$response->getBody());
+	}
+
+	# test person update failed due to person not found
+	public function testUpdateFruitNotFound() {
+		# expected result string
+		$resultString = '{"fruit_name":"apple", "fruit_color":"red", "season":"fall", "calories":"103", "description":"crunchy yet refreshing"}';
+
+		# mock the query class & fetchAll functions
+		$query = $this->createMock('mockQuery');
+		$query->method('fetch')->willReturn(false);
+		$this->db->method('query')
+					->willReturn($query);
+		 $this->db->method('exec')
+				->will($this->throwException(new PDOException()));
+
+		# mock the request environment (part of slim)
+		$env = Environment::mock([
+				'REQUEST_METHOD' => 'PUT',
+				'REQUEST_URI'    => '/fruit/1',
+				]);
+		$req = Request::createFromEnvironment($env);
+		$requestBody = ["fruit_name" =>  "apple", "fruit_color" => "red", "season" => "fall", "calories" => "103", "description" => "crunchy yet refeshing"];
+		$req =  $req->withParsedBody($requestBody);
+		$this->app->getContainer()['request'] = $req;
+
+		# actually run the request through the app
+		$response = $this->app->run(true);
+		# assert expected status code and body
+		$this->assertSame(404, $response->getStatusCode());
+		$this->assertSame('{"status":404,"message":"not found"}', (string)$response->getBody());
+
+	}
 }
