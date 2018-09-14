@@ -18,7 +18,7 @@ class App {
 
 		$container = $app->getContainer();
 		$container['db'] = $db;
-
+		# logs for app
 		$container['logger'] = function($c) {
 			$logger = new \Monolog\Logger('my_logger');
 			$file_handler = new

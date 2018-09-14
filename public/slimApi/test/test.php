@@ -190,4 +190,36 @@ class FruitTest extends TestCase {
 		$this->assertSame('{"status":404,"message":"not found"}', (string)$response->getBody());
 
 	}
+
+	public function testDeleteFruit() {
+		$query = $this->createMock('mockQuery');
+		$this->db->method('exec')->willReturn(true);
+		$env = Environment::mock([
+				'REQUEST_METHOD' => 'DELETE',
+				'REQUEST_URI'    => '/fruit/1',
+				]);
+		$req = Request::createFromEnvironment($env);
+		$this->app->getContainer()['request'] = $req;
+		# actually run the request through the app
+		$response = $this->app->run(true);
+		# assert expected status code and body
+		$this->assertSame(200, $response->getStatusCode());
+	}
+
+	# test fruit delete failed due to fruit not found (does not exist upon deletion)
+	public function testDeleteFruitFailed() {
+		$query = $this->createMock('mockQuery');
+		$this->db->method('exec')->willReturn(false);
+		$env = Environment::mock([
+				'REQUEST_METHOD' => 'DELETE',
+				'REQUEST_URI'    => '/fruit/1',
+				]);
+		$req = Request::createFromEnvironment($env);
+		$this->app->getContainer()['request'] = $req;
+		# actually run the request through the app
+		$response = $this->app->run(true);
+		# assert expected status code and body
+		$this->assertSame(404, $response->getStatusCode());
+		$this->assertSame('{"status":404,"message":"not found"}', (string)$response->getBody());
+	}
 }
