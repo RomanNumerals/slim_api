@@ -99,7 +99,7 @@ class App {
 				$id = $args['id'];
 				$this->logger->addInfo("PUT /fruit/".$id);
 
-				// check that peron exists
+				# check that fruit exists
 				$fruit = $this->db->query('SELECT * FROM fruit WHERE id='.$id)->fetch();
 				if(!$fruit){
 					$errorData = array('status' => 404, 'message' => 'not found');
@@ -107,7 +107,7 @@ class App {
 					return $response;
 				}
 
-				// build query string
+				# build query string
 				$updateString = "UPDATE fruit SET ";
 				$fields = $request->getParsedBody();
 				$keysArray = array_keys($fields);
@@ -115,20 +115,20 @@ class App {
 				foreach($fields as $field => $value) {
 					$updateString = $updateString . "$field = '$value'";
 					if ($field != $last_key) {
-						// conditionally add a comma to avoid sql syntax problems
+						# conditionally add a comma to avoid sql syntax problems
 						$updateString = $updateString . ", ";
 					}
 				}
 				$updateString = $updateString . " WHERE id = $id;";
 
-				// execute query
+				# execute query
 				try {
 					$this->db->exec($updateString);
 				} catch (\PDOException $e) {
 					$errorData = array('status' => 400, 'message' => 'Invalid data provided to update');
 					return $response->withJson($errorData, 400);
 				}
-				// return updated record
+				# return updated record
 				$person = $this->db->query('SELECT * FROM fruit WHERE id='.$id)->fetch();
 				$jsonResponse = $response->withJson($fruit);
 
