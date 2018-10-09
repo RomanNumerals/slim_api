@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script
+ src="https://code.jquery.com/jquery-3.3.1.min.js"
+ integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+ crossorigin="anonymous"></script>
+</head>
+<script src="../../public/script.js"></script>
+
+<h1><?php echo $title; ?> <span id="id" value=<?php echo $id ?>></span></h1>
+
+
+<form id='fruitsEdit'>
+ <div class="form-group">
+   <label for="fruit_name">Fruit name</label>
+   <input name="fruit_name" type="text" class="form-control" id="fruit_name" placeholder="Enter name">
+ </div>
+ <div class="form-group">
+   <label for="fruit_color">Fruit Color</label>
+   <input name="fruit_color" type="text" class="form-control" id="fruit_color" placeholder="Enter color">
+ </div>
+ <div class="form-group">
+   <label for="season">Season</label>
+   <input name="season" type="text" class="form-control" id="season" placeholder="Enter Season">
+ </div>
+ <div class="form-group">
+   <label for="calories">Calories</label>
+   <input name="calories" type="text" class="form-control" id="calories" placeholder="Enter calories">
+ </div>
+ <div class="form-group">
+   <label for="description">Description</label>
+   <input name="description" type="text" class="form-control" id="description" placeholder="Enter a brief description">
+ </div>
+ <button type="submit" class="btn btn-primary">Submit</button>
+</form>
